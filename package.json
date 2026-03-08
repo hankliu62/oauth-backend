@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "通用 OAuth 代理服务",
   "scripts": {
-    "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "dev": "vercel dev",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "koa": "^2.15.0",
@@ -14,12 +14,12 @@
     "@koa/cors": "^5.0.0"
   },
   "devDependencies": {
-    "rsbuild": "^1.0.0",
     "typescript": "^5.3.0",
     "@types/koa": "^2.14.0",
     "@types/koa-router": "^7.1.8",
     "@types/koa-bodyparser": "^4.3.12",
     "@types/koa__cors": "^5.0.0",
-    "@types/node": "^20.10.0"
+    "@types/node": "^20.10.0",
+    "vercel": "^33.0.0"
   }
 }
