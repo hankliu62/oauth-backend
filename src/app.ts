@@ -2,7 +2,7 @@ import cors from '@koa/cors';
 import Koa from 'koa';
 import bodyParser from 'koa-bodyparser';
 import Router from 'koa-router';
-import oauthRouter from './routes/oauth';
+import oauthRouter from './routes/oauth.js';
 
 const app = new Koa();
 

@@ -2,10 +2,14 @@
   "name": "oauth-backend",
   "version": "1.0.0",
   "description": "通用 OAuth 代理服务",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vercel dev",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "compile": "tsc",
+    "start": "node dist/api/index.js"
   },
   "dependencies": {
     "koa": "^2.15.0",

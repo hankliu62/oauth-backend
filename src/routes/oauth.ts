@@ -1,5 +1,5 @@
 import Router from 'koa-router';
-import { getAppConfig, getSupportedProviders, validateConfig } from '../utils/config';
+import { getAppConfig, getSupportedProviders, validateConfig } from '../utils/config.js';
 
 const router = new Router();
 
