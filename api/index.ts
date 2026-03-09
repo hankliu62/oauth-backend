@@ -8,5 +8,5 @@ if (!process.env.VERCEL) {
   });
 }
 
-// Vercel Serverless 导出：必须直接导出 callback
-export default app.callback();
+// Vercel Serverless 导出
+export default app;
