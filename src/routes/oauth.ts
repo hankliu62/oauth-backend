@@ -18,7 +18,17 @@ router.post('/api/oauth', async (ctx) => {
   const appId = ctx.get('X-App-Id');
   const provider = ctx.get('X-OAuth-Provider') || 'github';
 
+  console.log('[OAuth] Request received:', {
+    method: ctx.method,
+    url: ctx.url,
+    appId,
+    provider,
+    headers: ctx.headers,
+    body: ctx.request.body,
+  });
+
   if (!appId) {
+    console.log('[OAuth] Missing X-App-Id header');
     ctx.status = 400;
     ctx.body = { error: 'Missing X-App-Id header' };
     return;
@@ -27,7 +37,10 @@ router.post('/api/oauth', async (ctx) => {
   // 获取请求体
   const { code, codeVerifier, redirectUri } = ctx.request.body as OAuthRequestBody;
 
+  console.log('[OAuth] Request body:', { code, codeVerifier, redirectUri });
+
   if (!code || !codeVerifier || !redirectUri) {
+    console.log('[OAuth] Missing required parameters');
     ctx.status = 400;
     ctx.body = {
       error: 'Missing required parameters: code, codeVerifier, redirectUri',
@@ -38,7 +51,10 @@ router.post('/api/oauth', async (ctx) => {
   // 获取应用配置
   const config = getAppConfig(appId, provider);
 
+  console.log('[OAuth] App config:', { appId, provider, configFound: !!config });
+
   if (!config) {
+    console.log('[OAuth] App not found:', appId);
     ctx.status = 404;
     ctx.body = { error: `应用 ${appId} 未配置` };
     return;
@@ -48,6 +64,7 @@ router.post('/api/oauth', async (ctx) => {
   try {
     validateConfig(config, redirectUri);
   } catch (err: any) {
+    console.log('[OAuth] Config validation failed:', err.message);
     ctx.status = 400;
     ctx.body = { error: err.message };
     return;
@@ -58,6 +75,8 @@ router.post('/api/oauth', async (ctx) => {
     provider === 'gitee'
       ? 'https://gitee.com/oauth/token'
       : 'https://github.com/login/oauth/access_token';
+
+  console.log('[OAuth] Requesting token from:', tokenUrl);
 
   try {
     // 发送到 OAuth 提供商获取 token
@@ -78,7 +97,10 @@ router.post('/api/oauth', async (ctx) => {
 
     const tokenData = await tokenResponse.json();
 
+    console.log('[OAuth] Token response:', { status: tokenResponse.status, tokenData });
+
     if (tokenData.error) {
+      console.log('[OAuth] Token error from provider:', tokenData.error);
       ctx.status = 400;
       ctx.body = {
         error: tokenData.error,
@@ -90,7 +112,7 @@ router.post('/api/oauth', async (ctx) => {
     ctx.status = 200;
     ctx.body = tokenData;
   } catch (err) {
-    console.error('OAuth error:', err);
+    console.error('[OAuth] Request error:', err);
     ctx.status = 500;
     ctx.body = { error: 'Internal server error' };
   }
